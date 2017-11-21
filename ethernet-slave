@@ -1,0 +1,36 @@
+#include <SPI.h>
+#include <Ethernet.h>
+
+byte mac[] = {
+  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
+};
+
+// Alamat IP Address Client (Arduino)
+IPAddress ip(192, 168, 1, 2);
+
+// Alamat IP Address server
+IPAddress server(192, 168, 1, 177);
+int c;
+// Mendefinisikan arduino sebagai client
+EthernetClient client;
+
+void setup() {
+  Ethernet.begin(mac, ip);
+  // Client melakukan request koneksi ke server dengan IP Adreess dan port yg didefinisikan
+  client.connect(server, 23);
+  Serial.begin(9600);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  if (client.connected()) {
+    // Jika ada paket data yang masuk ke client
+    if (client.available()) {
+      // Menerima paket data dan menampilkan ke serial
+      c = client.read();
+      Serial.println(c);
+      analogWrite(9, c);
+    }
+   
+  }
+}
