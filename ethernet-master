@@ -1,0 +1,29 @@
+#include <SPI.h>
+#include <Ethernet.h>
+
+byte mac[] = {
+  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
+};
+
+IPAddress ip(192, 168, 1, 177);
+
+// Membuka akses port 23 untuk protokol TCP
+EthernetServer server(23);
+
+void setup() {
+  Ethernet.begin(mac, ip);
+  // Membuka koneksi dan menunggu koneksi dari client
+  server.begin();
+ // Serial.begin(9600);
+}
+
+void loop() {
+  // Mengirim data ke client yang telah terkoneksi   
+  //int randomData = random(0, 1000);
+  //server.print("Sent from Arduino : ");
+  int data=analogRead(A0);
+  data=map(data, 0, 1023, 0, 255);
+  //Serial.println(data);
+  server.write(data);
+  delay(100);
+}
